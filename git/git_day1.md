@@ -178,4 +178,37 @@
 
 ---
 ## 4. Git 기초
+### [ Git 초기 설정 ]
+> 최초 한 번만 설정. 매번 사용할 때마다 설정할 필요 없음
+1. 커밋 기록을 누가 남겼는지 확인할 수 있도록 이름과 이메일 설정. 작성자를 수정하고 싶을 때는 이름, 메일 주소만 바꿔서 입력
+```bash
+$git config --global user.name "이름"
+$git config --global user.email "메일 주소"
+```
+2. 작성자가 올바르게 설정 되었는지 확인
+```bash
+$git config --global -l
+또는
+$git config --global --list
+```
+### [Git 기본 명령어]
+#### (0) 로컬 저장소
+* `Working Directory` : 사용자의 일반적인 작업이 일어나는 곳
+* `Staging Area` : 커밋을 위한 파일, 폴더가 추가되는 곳
+* `Repository` :staging area에 있던 파일, 폴더의 변경사항(커밋)을 저장하는 곳
+* Working Directory → Staging Area → Repository 과정으로 버전 관리를 수행
+#### (1) git init
+* `$git init` :현재 작업 중인 디렉토리를 Git으로 관리한다는 명령어
+* `.git` 이라는 숨김 폴더 생성, 터미널에는 `(master)` 로 표기
+> **주의 사항** 
+> 1. 이미 Git 저장소인 폴더 내에는 또 다른 Git 저장소를 만들지 않음 (중첩 금지)
+> 2. 홈 디렉토리에서 git init 하지 않기(경로 `~`인지 확인)
+#### (2) git status
+* `git status` : Working Directory와 Staging Area에 있는 파일의 현재 상태를 알려주는 명령어
+* 상태
+  1. `Untracked`: Git이 관리하지 않는 파일(Staging Area에 올라간 적 없음)
+  2. `Tracked`: Git이 관리하는 파일
+   a. `Unmodified`: 최신 상태
+   b. `Modified`: 수정되었지만 아직 Staging Area에는 반영하지 않은 상태
+   c. `staged`: Staging Area에 올라간 상태
 ## 5. Github
