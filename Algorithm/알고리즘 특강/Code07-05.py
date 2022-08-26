@@ -1,12 +1,19 @@
-#완전버전 큐
-#문제 : 꽉 찼다가 추출 후 다시 삽입이 안됨
+#완전버전 큐 _ 개선
+#문제 : 큐 크기가 많을 때는 데이터 당길 때 시간이 오래 소요 -> 해결 : 원형 큐
 
 ## 함수
 def isQueueFull():
     global SIZE, queue, front, rear
-    if (rear == SIZE-1) :
+    if (rear != SIZE-1) :
+        return False
+    elif (rear == SIZE-1 and front == -1) :
         return True
     else :
+        for i in range(front+1,SIZE) :
+            queue[i-1] = queue[i]
+            queue[i] = None
+        front -= 1
+        rear -= 1
         return False
 
 def enQueue(data) :
@@ -51,8 +58,8 @@ front = rear = -1
 enQueue('화사')
 enQueue('솔라')
 enQueue('문별')
-#enQueue('휘인')
-#enQueue('선미')
+enQueue('휘인')
+enQueue('선미')
 print('[출구]<--', queue, '<--[입구]')
 
 retData = deQueue()
@@ -61,8 +68,11 @@ retData = peek()
 print(f'{retData}님 준비하세요')
 retData = deQueue()
 print('식사손님 :', retData)
-retData = deQueue()
-print('식사손님 :', retData)
-retData = deQueue()
-print('식사손님 :', retData)
+#retData = deQueue()
+#print('식사손님 :', retData)
+#retData = deQueue()
+#print('식사손님 :', retData)
+print('[출구]<--', queue, '<--[입구]')
+
+enQueue('제니')
 print('[출구]<--', queue, '<--[입구]')
