@@ -13,3 +13,29 @@
 # 3 2 1 1 9
 # 출력 예시 :
 # 8
+
+N = int(input())
+
+coin  = list(map(int, input().split()))
+
+#nums =  n_list
+# [1,5,2,5,6]
+
+#from itertools import combinations
+
+#for i in range(2, N+1):
+#    for c in combinations(n_list, i):
+#        nums.append(sum(c))
+
+#nums = set(nums)
+#print(nums)
+
+##ordered_num = [i for i in range(1, sum(n_list)+1)]
+#print(ordered_num)
+
+#for n in ordered_num:
+#    if n not in nums:
+#        print(n)
+#       break
+
+
