@@ -83,7 +83,7 @@ def question_delete(request, question_id):
 @login_required(login_url='common:login')
 def answer_modify(request, answer_id):
     answer = get_object_or_404(Answer, pk=answer_id)
-    if request.uesr != answer.author:
+    if request.user != answer.author:
         messages.error(request, '수정권한이 없습니다')
         return redirect('pybo:detail', question_id=answer.question.id)
     if request.method == "POST":
