@@ -140,6 +140,43 @@ function 함수명(매개변수){
 * return을 함수 종료 목적으로 사용하기도 함.
 
 ### 11. 함수 표현식, 화살표 함수(arrow function)
+* 함수 선언문 -> 기존의 함수, 어디서든 호출 가능 (호이스팅)
+* 함수 표현식 -> 함수 이름을 짓지 않고 변수에 할당, 코드에 도달하면 생성
+* 화살표 함수 -> `=>`를 사용해 함수를 간단히 정의, 함수 안의 return문은 소괄호로 변환 가능, 한줄일 경우는 이것도 생략 가능
+
 ### 12. 객체(Object)
+```
+객체명 = {
+    key : value,
+    key : value,
+    ...
+}
+```
+* 접근 - `객체명.key`, `객체명['key']`
+* 추가 - `객체명.key = value;`, `객체명['key'] = value;`
+* 삭제 - `delete 객체명.key`
+* 존재 여부 확인 - 존재하지 않는 property의 경우 undefined
+* for ... in 반복문
+```
+for (let key in 객체명) {
+    console.log(key)
+    console.log(객체명[key])
+}
+```
+
 ### 13. 객체(Object) - method, this
+* method : 객체 프로퍼티로 할당 된 함수
+* this => 객체를 가리킴
+    * 화살표 함수는 일반 함수와 달리 자신만의 this를 가지지 않아 함수 내부에서 this를 사용하면, 외부에서 값을 가져옴.
+![Alt text](image.png)
+![Alt text](image-1.png)
+
 ### 14. 배열(Array)
+: 순서가 있는 리스트 `[]`
+* 문자, 숫자, 객체, 함수 등 포함 가능
+* `.length` - 배열의 길이 반환
+* `.push()` - 배열 끝에 추가
+* `.pop()` - 배열 끝에 요소 제거
+* `.unshift()` - 배열 앞에 추가
+* `.shift()` - 배열 앞에 요소 제거
+* for문 / for ... of문
