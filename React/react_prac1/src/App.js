@@ -1,41 +1,16 @@
-import { getImageUrl } from "./component/utils";
+import { useState } from 'react';
 
-function Avatar({person, size}) {
-  return (
-    <img 
-      className="avatar"
-      src={getImageUrl(person)}
-      alt={person.name}
-      width= {size}
-      height= {size}
-    />
-  );
-}
+export default function Counter() {
+  const [number, setNumber] = useState(0);
 
-export default function Profile() {
   return (
-    <div>
-      <Avatar
-        size={100}
-        person={{ 
-          name: 'Katsuko Saruhashi', 
-          imageId: 'YfeOqp2'
-        }}
-      />
-      <Avatar
-        size={80}
-        person={{
-          name: 'Aklilu Lemma', 
-          imageId: 'OKS67lh'
-        }}
-      />
-      <Avatar
-        size={50}
-        person={{ 
-          name: 'Lin Lanying',
-          imageId: '1bX5QH6'
-        }}
-      />
-    </div>
-  );
+    <>
+      <h1>{number}</h1>
+      <button onClick={() => {
+        setNumber(number + 5);
+        console.log("onClick : ", number)
+      }}>+5</button>  
+      {console.log(number)}
+    </>
+  )
 }
