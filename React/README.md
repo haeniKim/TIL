@@ -497,28 +497,216 @@ return (
 
 - `con ? A : B` ⇒ condition 이 true이면 A 렌더링, false이면 B 렌더링
 
-### 3) 논리 AND 연산자 (
+### 3) 논리 AND 연산자 (`&&`)
+
+```jsx
+return (
+  <li className="item">
+    {name} {isPacked && '✔'}
+  </li>
+);
+```
+
+- 조건이 참일 때 렌더링, 그렇지 않으면(false), 아무 것도 렌더링 하지 않음
+
+### Summary
+
+- In React, you control branching logic with JavaScript.
+- You can return a JSX expression conditionally with an `if` statement.
+- You can conditionally save some JSX to a variable and then include it inside other JSX by using the curly braces.
+- In JSX, `{cond ? <A /> : <B />}` means *“if `cond`, render `<A />`, otherwise `<B />`”*.
+- In JSX, `{cond && <A />}` means *“if `cond`, render `<A />`, otherwise nothing”*.
+- The shortcuts are common, but you don’t have to use them if you prefer plain `if`.
 
 ## 7. Rendering Lists
 
 > JavaScript의 `filter()` , `map()` 을 사용해 데이터 배열을 필터링하고 component의 배열로 변환할 수 있음. 각 배열 항목마다 `key` 를 지정해 목록이 변경되더라도 목록에서 각 항목의 위치 추적 가능
 > 
 
+### 1) Rendering data from arrays
+
+1. Move the data into an array
+    
+    ```jsx
+    const people = [
+      'Creola Katherine Johnson: mathematician',
+      'Mario José Molina-Pasquel Henríquez: chemist',
+      'Mohammad Abdus Salam: physicist',
+      'Percy Lavon Julian: chemist',
+      'Subrahmanyan Chandrasekhar: astrophysicist'
+    ];
+    ```
+    
+2. Map the data into a new array of JSX nodes
+    
+    ```jsx
+    const listItems = people.map(person => <li>{person}</li>);
+    ```
+    
+3. Return new array from the component 
+    
+    ```jsx
+    return <ul>{listItems}</ul>;
+    ```
+    
+
+### 2) Filtering arrays of items
+
+1. Create a new array of some conditions, by calling `filter()` on the array filtering by conditions.
+    
+    ```jsx
+    const chemists = people.filter(person =>
+      person.profession === 'chemist'
+    );
+    ```
+    
+2. map over new array
+    
+    ```jsx
+    const listItems = chemists.map(person =>
+      <li>
+         <img
+           src={getImageUrl(person)}
+           alt={person.name}
+         />
+         <p>
+           <b>{person.name}:</b>
+           {' ' + person.profession + ' '}
+           known for {person.accomplishment}
+         </p>
+      </li>
+    );
+    ```
+    
+3. return the mapped array from the component
+    
+    ```jsx
+    return <ul>{listItems}</ul>;
+    ```
+    
+    <aside>
+    👉 화살표 함수(`⇒`)는 바로 뒤에 표현식을 암시적으로 Reurn하므로 `return` 문이 필요하지 않음.
+    하지만 중괄호(`{}`)가 오는 경우는 `return` 문 필요.
+    
+    </aside>
+    
+
+### 3) About `key`
+
+- map각 배열의 항목들을 고유하게 식별할 수 있는 문자열 또는 숫자인 key를 부여해야 함.
+- key는 각 컴포넌트가 어떤 배열 항목에 해당하는지 알려줘 매칭하도록 함.
+- 따로 지정하지 않으면 기본적으로 Index를 Key로 사용하지만 새 항목 삽입, 삭제, 배열 순서가 바뀌면서 변경될 수 있음
+
+**key를 얻는 방법**
+
+1. Database 데이터 : 고유한 DB key/ID 사용 
+2. Local 데이터 : incrementing counter, `crypto.randomUUID()` , `uuid` 패키지 사용
+
+**key 규칙**
+
+- 같은 배열 JSX 노드에는 고유해야 함.
+- Key는 변경되지 않아야 함 (렌더링 중 생성 금지)
+
+### Summary
+
+- How to move data out of components and into data structures like arrays and objects.
+- How to generate sets of similar components with JavaScript’s `map()`.
+- How to create arrays of filtered items with JavaScript’s `filter()`.
+- Why and how to set `key` on each component in a collection so React can keep track of each of them even if their position or data changes.
+
 ## 8. Keeping Components Pure
 
 ### Pure function
 
-- 자신의 일만 처리 - 호출 전 존재했던 객체나 변수를 변경하지 않음
-- same inputs, same outputs - 동일 입력에는 항상 동일 결과 반환
+1. 자신의 일만 처리 - 호출 전 존재했던 객체나 변수를 변경하지 않음
+2. same inputs, same outputs - 동일 입력에는 항상 동일 결과 반환
 - 버그나 예측 불가한 동작이 발생하는 것을 피할 수 있음.
 
 ### 1) **Purity: Components as formulas**
 
-- **It minds its own business.** It does not change any objects or variables that existed before it was called.
-- **Same inputs, same output.** Given the same inputs, a pure function should always return the same result.
+- React는 모든 컴포넌트가 pure function 이라고 가정.
 
 ### 2) **Side Effects: (un)intended consequences**
 
+- 컴포넌트는 JSX만을 반환해야 하고, 렌더링 전 존재하는 객체, 변수를 변경해서는 안됨
+
+[순수성을 어기는 예시]
+
+```jsx
+let guest = 0;
+
+function Cup() {
+  // Bad: changing a preexisting variable!
+  // 나쁨: 기존 변수를 변경합니다!
+  guest = guest + 1;
+  return <h2>Tea cup for guest #{guest}</h2>;
+}
+
+export default function TeaSet() {
+  return (
+    <>
+      <Cup />
+      <Cup />
+      <Cup />
+    </>
+  );
+}
+```
+
+[수정]
+
+```jsx
+function Cup({ guest }) {
+  return <h2>Tea cup for guest #{guest}</h2>;
+}
+
+export default function TeaSet() {
+  return (
+    <>
+      <Cup guest={1} />
+      <Cup guest={2} />
+      <Cup guest={3} />
+    </>
+  );
+}
+```
+
 ### 3) **Local mutation: Your component’s little secret**
 
+- 렌더링 전에 존재하는 것을 변경하는 것은 안되지만 렌더링 하는 동안 ‘방금’ 생성한 변수와 객체를 변경하는 것은 가능
+    
+    ```jsx
+    function Cup({ guest }) {
+      return <h2>Tea cup for guest #{guest}</h2>;
+    }
+    
+    export default function TeaGathering() {
+      let cups = [];
+      for (let i = 1; i <= 12; i++) {
+        cups.push(<Cup key={i} guest={i} />);
+      }
+      return cups;
+    }
+    ```
+    
+
 ### 4) **Where you *can* cause side effects**
+
+- 화면 업데이트, 애니메이션 시작, 데이터 변경과 같은 변경을 side effect라고 함. **렌더링 중이 아닌 ‘부수적으로’** 일어나는 일
+
+**event handler**
+
+- 대게 React에서 사이트 이펙트는 event handler에 속함
+- 사용자가 어떤 동작 수행할 때, React가 실행하는 함수
+- 컴포넌트 내부에 정의되어 있지만 렌더링 중에는 실행되지 않음
+- 적절한 event handler가 없다면 `useEffect` 사용
+
+### Summary
+
+- A component must be pure, meaning:
+    - **It minds its own business.** It should not change any objects or variables that existed before rendering.
+    - **Same inputs, same output.** Given the same inputs, a component should always return the same JSX.
+- Rendering can happen at any time, so components should ***not depend on each others’ rendering sequence.***
+- You should not mutate any of the inputs that your components use for rendering. That includes props, state, and context. To update the screen, [“set” state](https://react-ko.dev/learn/state-a-components-memory) instead of mutating preexisting objects.
+- Strive to express your component’s logic in the JSX you return. When you need to “change things”, you’ll usually want to do it in an event handler. As a last resort, you can `useEffect`.
+- Writing pure functions takes a bit of practice, but it unlocks the power of React’s paradigm.
