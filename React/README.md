@@ -1,7 +1,3 @@
-## React.js
-
-> [React] 공식문서
-
 # [React] Describing the UI
 
 # [Describing the UI](https://react.dev/learn/describing-the-ui)
@@ -448,7 +444,6 @@ function Profile(props) {
 
 - JSX 태그 내 콘텐츠 중첩을 하면 부모 컴포넌트는 해당 컨텐츠를 `children` 이라는 prop으로 받음
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/02e0792b-c475-4c1b-9192-9bff7c1fa4a3/410d8866-7252-45df-a6a0-b79b52e7cf26/Untitled.png)
 
 ### Summary
 
@@ -710,3 +705,64 @@ export default function TeaSet() {
 - You should not mutate any of the inputs that your components use for rendering. That includes props, state, and context. To update the screen, [“set” state](https://react-ko.dev/learn/state-a-components-memory) instead of mutating preexisting objects.
 - Strive to express your component’s logic in the JSX you return. When you need to “change things”, you’ll usually want to do it in an event handler. As a last resort, you can `useEffect`.
 - Writing pure functions takes a bit of practice, but it unlocks the power of React’s paradigm.
+
+## 9. Understanding Your UI as a Tree
+
+> React와 많은 UI 라이브러리는 UI를 트리로 모델링
+> 
+- Tree ⇒ relationship model ex)브라우저는 HTML(DOM), CSS(CSSOM) 모델링을 위해 트리 구조 사용
+
+
+### The Render Tree (렌더링할 때 사용하는 트리 개념)
+
+- React app을 rendering 할 때 render tree로 이 관계들을 모델링 할 수 있음.
+- 컴포넌트의 주요 특징 : 다른 컴포넌트의 컴포넌트를 구성할 수 있음
+- 컴포넌트 중첩 시 parent component, child component 개념이 생김
+- Root node = App의 Root 컴포넌트
+- node = component, branch = render
+- conditional rendering ⇒ 부모 컴포넌트가 전달된 데이터에 따라 다른 child component를 렌더링
+    
+    ```jsx
+    import * as React from 'react';
+    import inspirations from './inspirations';
+    import FancyText from './FancyText';
+    import Color from './Color';
+    
+    export default function InspirationGenerator({children}) {
+      const [index, setIndex] = React.useState(0);
+      const inspiration = inspirations[index];
+      const next = () => setIndex((index + 1) % inspirations.length);
+    
+      return (
+        <>
+          <p>Your inspirational {inspiration.type} is:</p>
+          {inspiration.type === 'quote'
+          ? <FancyText text={inspiration.value} />
+          : <Color value={inspiration.value} />}
+    
+          <button onClick={next}>Inspire me again</button>
+          {children}
+        </>
+      );
+    }
+    ```
+    
+
+
+### The Module Dependency Tree
+
+- 모듈간의 의존성 관계를 나타낼 때 사용하는 트리
+- 컴포넌트를 분리하고 로직을 별도의 파일로 분리하면, 컴포넌트, 함수, 상수를 내보내느 JS 모듈을 만들 수 있음
+- Root node = root module, 일반적으로 루트 컴포넌트 포함하는 모듈
+- node = module, branch = `import`
+- module dependency tree는 컴포넌트가 아닌 모듈도 트리에 나타냄
+
+### Summary
+
+- Trees are a common way to represent the relationship between entities. They are often used to model UI.
+- Render trees represent the nested relationship between React components across a single render.
+- With conditional rendering, the render tree may change across different renders. With different prop values, components may render different children components.
+- Render trees help identify what the top-level and leaf components are. Top-level components affect the rendering performance of all components beneath them and leaf components are often re-rendered frequently. Identifying them is useful for understanding and debugging rendering performance.
+- Dependency trees represent the module dependencies in a React app.
+- Dependency trees are used by build tools to bundle the necessary code to ship an app.
+- Dependency trees are useful for debugging large bundle sizes that slow time to paint and expose opportunities for optimizing what code is bundled.
